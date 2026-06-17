@@ -5,6 +5,12 @@ on:
   schedule:
     # A cada 3 horas, todo dia (horário em UTC)
     - cron: "0 */3 * * *"
+
+# Impede runs simultâneos (agendado + manual) gravando no Sheet/Drive ao mesmo tempo
+concurrency:
+  group: consulta-gpm-ce
+  cancel-in-progress: false
+
 jobs:
   run_compilador:
     runs-on: ubuntu-latest

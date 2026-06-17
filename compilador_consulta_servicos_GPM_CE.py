@@ -127,6 +127,13 @@ def upload_or_update_banco(drive_service, folder_id, drive_id, local_path, filen
 # DATA HELPERS
 # =========================
 def keep_only_columns_by_position(df, positions_1based):
+    n_cols = df.shape[1]
+    faltando = [p for p in positions_1based if p > n_cols]
+    if faltando:
+        raise ValueError(
+            f"CSV tem {n_cols} colunas, mas as posições {faltando} não existem. "
+            f"O layout de origem provavelmente mudou."
+        )
     idx = [p - 1 for p in positions_1based]
     return df.iloc[:, idx]
 
