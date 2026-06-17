@@ -37,7 +37,13 @@ KEEP_COL_POS_1BASED = [47, 6, 27, 50, 52, 68, 70]
 # =========================
 # AUTH
 # =========================
+_CREDENTIALS = None
+
 def get_credentials():
+    global _CREDENTIALS
+    if _CREDENTIALS is not None:
+        return _CREDENTIALS
+
     secret = os.getenv("GOOGLE_CREDENTIALS_B64")
     if not secret:
         raise ValueError("O secret 'GOOGLE_CREDENTIALS_B64' não foi encontrado!")
@@ -45,7 +51,8 @@ def get_credentials():
     credentials_json = base64.b64decode(secret).decode("utf-8")
     info = json.loads(credentials_json)
 
-    return service_account.Credentials.from_service_account_info(info, scopes=SCOPES)
+    _CREDENTIALS = service_account.Credentials.from_service_account_info(info, scopes=SCOPES)
+    return _CREDENTIALS
 
 def get_drive_service():
     return build("drive", "v3", credentials=get_credentials())
@@ -148,7 +155,7 @@ def to_number_ptbr(value):
         s = s.replace(".", "").replace(",", ".")
     try:
         return float(s)
-    except:
+    except (ValueError, TypeError):
         return 0.0
 
 # =========================
@@ -318,8 +325,8 @@ def main():
     for f in temp_files:
         try:
             os.remove(f)
-        except:
-            pass
+        except OSError as e:
+            print(f"[WARN] Não consegui remover temp {f}: {e}")
 
     if not dfs:
         print("[ERRO] Nenhum CSV válido.")
