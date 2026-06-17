@@ -1,5 +1,7 @@
 # Compilador Consulta Serviços GPM CE
 
+[![Consulta Serviços GPM CE](https://github.com/lucasbeloni-sketch/compilador_consulta_servicos_GPM_CE/actions/workflows/run_consulta_servicos_GPM_CE.yml/badge.svg)](https://github.com/lucasbeloni-sketch/compilador_consulta_servicos_GPM_CE/actions/workflows/run_consulta_servicos_GPM_CE.yml)
+
 Compila CSVs de serviços a partir de uma pasta no Google Drive, normaliza os
 dados (datas em pt-BR por arquivo, valores numéricos), gera `BANCO.csv` e
 atualiza uma planilha do Google Sheets.
