@@ -1,0 +1,6 @@
+__pycache__/
+*.pyc
+*.json
+*.b64
+credentials*.json
+service_account*.json
