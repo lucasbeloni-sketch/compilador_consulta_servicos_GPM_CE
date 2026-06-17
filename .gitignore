@@ -4,3 +4,6 @@ __pycache__/
 *.b64
 credentials*.json
 service_account*.json
+
+# Output gerado pelo script (não versionar dados reais)
+BANCO.csv

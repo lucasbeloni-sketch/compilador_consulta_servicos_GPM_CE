@@ -63,6 +63,14 @@ def get_sheets_service():
 # =========================
 # DRIVE HELPERS
 # =========================
+def _scope_kwargs(drive_id):
+    """Args de escopo p/ files().list. Usa Shared Drive se houver driveId,
+    senão cai no My Drive do usuário (corpora padrão)."""
+    base = dict(supportsAllDrives=True, includeItemsFromAllDrives=True)
+    if drive_id:
+        base.update(corpora="drive", driveId=drive_id)
+    return base
+
 def list_files(service, folder_id, drive_id):
     query = f"'{folder_id}' in parents and trashed = false"
     files = []
@@ -74,10 +82,7 @@ def list_files(service, folder_id, drive_id):
             pageToken=token,
             pageSize=1000,
             fields="nextPageToken, files(id,name,mimeType)",
-            supportsAllDrives=True,
-            includeItemsFromAllDrives=True,
-            corpora="drive",
-            driveId=drive_id,
+            **_scope_kwargs(drive_id),
         ).execute()
 
         files.extend(resp.get("files", []))
@@ -102,10 +107,7 @@ def find_file_in_folder(service, folder_id, drive_id, filename):
         q=query,
         fields="files(id,name)",
         pageSize=10,
-        supportsAllDrives=True,
-        includeItemsFromAllDrives=True,
-        corpora="drive",
-        driveId=drive_id,
+        **_scope_kwargs(drive_id),
     ).execute()
 
     files = resp.get("files", [])
@@ -294,8 +296,8 @@ def main():
         supportsAllDrives=True
     ).execute()
 
-    drive_id = folder["driveId"]
-    print(f"[OK] Pasta: {folder['name']}")
+    drive_id = folder.get("driveId")  # None se a pasta estiver no My Drive
+    print(f"[OK] Pasta: {folder['name']} (drive_id={drive_id or 'My Drive'})")
 
     files = list_files(drive_service, NEW_FOLDER_ID, drive_id)
 
