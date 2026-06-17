@@ -2,6 +2,9 @@ name: Consulta Serviços GPM CE
 
 on:
   workflow_dispatch:
+  schedule:
+    # A cada 3 horas, todo dia (horário em UTC)
+    - cron: "0 */3 * * *"
 jobs:
   run_compilador:
     runs-on: ubuntu-latest
